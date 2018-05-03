@@ -11,7 +11,8 @@ STAR \
 --genomeDir genome/ \
 --genomeFastaFiles genome/Ixodes_scapularis.IscaW1.dna.toplevel.fa \
 --sjdbGTFfile genome/Ixodes_scapularis.IscaW1.39.gtf \
---sjdbOverhang 149
+--sjdbOverhang 149 \
+--genomeChrBinNbits 10
 
 
 
