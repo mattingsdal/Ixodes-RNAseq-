@@ -1,0 +1,3 @@
+module load java
+module load fastqc
+fastqc *gz -t 10
