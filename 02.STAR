@@ -12,3 +12,12 @@ STAR \
 --genomeFastaFiles genome/Ixodes_scapularis.IscaW1.dna.toplevel.fa \
 --sjdbGTFfile genome/Ixodes_scapularis.IscaW1.39.gtf \
 --sjdbOverhang 149
+
+
+
+## make loop for every paired read
+STAR \
+--runThreadN 12 --genomeDir genome/ \
+--sjdbGTFfile genome/Ixodes_scapularis.IscaW1.39.gtf --sjdbOverhang 149 \
+--readFilesIn fastq/star/R_S79_R1_001.fastq.gz fastq//R_S79_R2_001.fastq.gz \
+--readFilesCommand zcat
