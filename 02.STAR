@@ -23,4 +23,6 @@ STAR \
 --readFilesIn fastq/R_S79_R1_001.fastq.gz fastq//R_S79_R2_001.fastq.gz \
 --outSAMtype BAM SortedByCoordinate \
 --quantMode GeneCounts \
+--outFilterMismatchNmax 15 \
+--outFilterMismatchNoverReadLmax 0.05 \
 --readFilesCommand zcat
