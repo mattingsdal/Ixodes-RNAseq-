@@ -7,6 +7,8 @@ for f in *R1_001.fastq.gz; do
 --file1 $f --file2 $r \
 --adapter1 AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
 --adapter2 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA \
---basename $s --trimns --trimqualities --collapse --threads 10
+--basename $s --trimns --trimqualities --threads 10 --gzip \
+--output1 $s.R1.noadapt.fastq.gz --output2 $s.R2.noadapt.fastq.gz 
 
 done
+
