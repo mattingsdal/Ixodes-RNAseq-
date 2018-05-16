@@ -20,7 +20,7 @@ STAR \
 STAR \
 --runThreadN 12 --genomeDir genome/ \
 --sjdbGTFfile genome/Ixodes_scapularis.IscaW1.39.gtf --sjdbOverhang 149 \
---readFilesIn fastq/R_S79_R1_001.fastq.gz fastq//R_S79_R2_001.fastq.gz \
+--readFilesIn fastq/A.R1.noadapt.fastq.gz fastq//A.R2.noadapt.fastq.gz \
 --outSAMtype BAM SortedByCoordinate \
 --quantMode GeneCounts \
 --outFilterMismatchNmax 9 \
