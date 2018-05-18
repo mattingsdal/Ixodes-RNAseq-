@@ -17,17 +17,27 @@ STAR \
 
 
 ## make loop for every paired read
-nohup STAR \
---runThreadN 12 --genomeDir genome/ \
+
+module load star
+
+for f in fastq/*R1.noadapt.fastq.gz; do
+
+    r=$(sed -e "s/_R1_/_R2_/" <<< "$f")
+    s=$(cut -d. -f1 <<< "$f")
+
+STAR \
+--runThreadN 20 --genomeDir genome/ \
 --sjdbGTFfile genome/Ixodes_scapularis.IscaW1.39.gtf --sjdbOverhang 149 \
---readFilesIn fastq/A.R1.noadapt.fastq.gz fastq/A.R2.noadapt.fastq.gz \
+--readFilesIn ${f} ${r} \
 --outSAMtype BAM SortedByCoordinate \
 --quantMode GeneCounts \
 --outFilterMismatchNmax 5 \
 --outFilterMismatchNoverReadLmax 0.02 \
 --alignIntronMax 100000 \
 --alignMatesGapMax 100000 \
---outFileNamePrefix adapt2 \
+--outFileNamePrefix ${s} \
 --readFilesCommand zcat \
---outFilterScoreMinOverLread 0.3 --outFilterMatchNminOverLread 0.3 &
+
+done
+
 
