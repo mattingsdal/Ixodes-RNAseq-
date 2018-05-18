@@ -17,15 +17,17 @@ STAR \
 
 
 ## make loop for every paired read
-STAR \
+nohup STAR \
 --runThreadN 12 --genomeDir genome/ \
 --sjdbGTFfile genome/Ixodes_scapularis.IscaW1.39.gtf --sjdbOverhang 149 \
---readFilesIn fastq/A.R1.noadapt.fastq.gz fastq//A.R2.noadapt.fastq.gz \
+--readFilesIn fastq/A.R1.noadapt.fastq.gz fastq/A.R2.noadapt.fastq.gz \
 --outSAMtype BAM SortedByCoordinate \
 --quantMode GeneCounts \
---outFilterMismatchNmax 9 \
---outFilterMismatchNoverReadLmax 0.03 \
+--outFilterMismatchNmax 5 \
+--outFilterMismatchNoverReadLmax 0.02 \
 --alignIntronMax 100000 \
 --alignMatesGapMax 100000 \
---outFileNamePrefix mis9 \
---readFilesCommand zcat
+--outFileNamePrefix adapt2 \
+--readFilesCommand zcat \
+--outFilterScoreMinOverLread 0.3 --outFilterMatchNminOverLread 0.3 &
+
