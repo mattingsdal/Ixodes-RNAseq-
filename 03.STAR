@@ -37,6 +37,7 @@ STAR \
 --alignMatesGapMax 100000 \
 --outFileNamePrefix ${s} \
 --readFilesCommand zcat \
+--outFilterMatchNminOverLread 0 --outFilterScoreMinOverLread 0 --outFilterMatchNmin  40
 
 done
 
