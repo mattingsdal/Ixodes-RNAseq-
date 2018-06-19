@@ -1,1 +1,18 @@
 
+#
+merge reads 
+cat A.R1.noadapt.fastq.gz B.R1.noadapt.fastq.gz L.R1.noadapt.fastq.gz M.R1.noadapt.fastq.gz >R1.merge.gastq.gz
+cat A.R2.noadapt.fastq.gz B.R2.noadapt.fastq.gz L.R2.noadapt.fastq.gz M.R2.noadapt.fastq.gz >R2.merge.gastq.gz
+
+## trinity to generate transcriptome fasta
+Trinity --seqType fq --left R1.merge.gastq.gz --right R2.merge.gastq.gz --CPU 20 --max_memory 40G --min_contig_length 100
+
+## use salmon to quantify reads
+
+## use salmon to index transcriptome
+~/software/salmon-0.10.0_linux_x86_64/bin/salmon index -t trinity_out_dir/Trinity.fasta -i transcripts_index --type quasi -k 31
+
+## quantify transcripts
+~/software/salmon-0.10.0_linux_x86_64/bin/salmon quant -i transcripts_index -l A -1 <(bunzip2 -c L.R1.noadapt.fastq.gz) -2 <(bunzip2 -c L.R2.noadapt.fastq.gz) -o transcripts_quant_L
+
+
