@@ -16,3 +16,11 @@ Trinity --seqType fq --left R1.merge.gastq.gz --right R2.merge.gastq.gz --CPU 20
 ~/software/salmon-0.10.0_linux_x86_64/bin/salmon quant -i transcripts_index -l A -1 <(bunzip2 -c L.R1.noadapt.fastq.gz) -2 <(bunzip2 -c L.R2.noadapt.fastq.gz) -o transcripts_quant_L
 
 
+
+
+
+####
+module load trinityrnaseq/2.5.1
+Trinity --seqType fq --left A_S65_R1_001.fastq --right A_S65_R2_001.fastq --quality_trimming_params "ILLUMINACLIP:/cluster/software/VERSIONS/trinityrnaseq/2.3.2/trinity-plugins/Trimmomatic/adapters/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:4:5 LEADING:5 TRAILING:5 MINLEN:25" --CPU 20 --max_memory 40G --output trinity_test2
+
+
