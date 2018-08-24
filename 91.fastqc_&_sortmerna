@@ -1,0 +1,29 @@
+module load java
+module load fastqc
+module load sortmerna/2.1
+
+fastqc *gz -t 10
+
+
+for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
+do
+gunzip $i*gz
+/cluster/software/VERSIONS/sortmerna/2.0/scripts/merge-paired-reads.sh ${i}_R1_001.fastq ${i}_R2_001.fastq ${i}.fastq
+
+sortmerna --ref \
+/usit/abel/u1/mortema/sortmerna/silva-bac-16s-id90.fasta,/usit/abel/u1/mortema/sortmerna/silva-bac-16s-id90.idx:\
+/usit/abel/u1/mortema/sortmerna/silva-bac-23s-id98.fasta,/usit/abel/u1/mortema/sortmerna/silva-bac-23s-id98.ids:\
+/usit/abel/u1/mortema/sortmerna/silva-arc-16s-id95.fasta,/usit/abel/u1/mortema/sortmerna/silva-arc-16s-id95.idx:\
+/usit/abel/u1/mortema/sortmerna/silva-arc-23s-id98.fasta,/usit/abel/u1/mortema/sortmerna/silva-arc-23s-id98.idx:\
+/usit/abel/u1/mortema/sortmerna/silva-euk-18s-id95.fasta,/usit/abel/u1/mortema/sortmerna/silva-euk-18s-id95.idx:\
+/usit/abel/u1/mortema/sortmerna/silva-euk-28s-id98.fasta,/usit/abel/u1/mortema/sortmerna/silva-euk-28s-id98.idx:\
+/usit/abel/u1/mortema/sortmerna/rfam-5s-database-id98.fasta,/usit/abel/u1/mortema/sortmerna/rfam-5s-database-id98.idx:\
+/usit/abel/u1/mortema/sortmerna/rfam-5.8s-database-id98.fasta,/usit/abel/u1/mortema/sortmerna/rfam-5.8s-database-id98.idx \
+ --reads ${i}.fastq --fastx --aligned sortmerna/${i}.reads_rRNA --other sortmerna/${i}.reads_non_rRNA -a 32 -m 462144 --paired_in -v
+
+## unmerge
+/cluster/software/VERSIONS/sortmerna/2.0/scripts/unmerge-paired-reads.sh sortmerna/${i}.reads_rRNA ${i}_1_noRNA.fq ${i}_2_noRNA.fq
+
+rm *fastq
+
+done
