@@ -27,3 +27,19 @@ sortmerna --ref \
 rm *fastq
 
 done
+
+#### use trimmomatric to loop through non-RNA reads to trim quaity and unpaired
+
+module load java
+
+for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
+do
+
+java -Xmx1G -jar ~/software/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 -threads 16 \
+${i}_1_noRNA.fq ${i}_2_noRNA.fq ${i}_left_P_qtrim.fq ${i}_left_U_qtrim.fq ${i}_right_P_qtrim.fq ${i}_right_U_qtrim.fq \
+ILLUMINACLIP:/usit/abel/u1/mortema/software/Trimmomatic-0.36/adapters/TruSeq3-PE-2.fa:2:30:10 SLIDINGWINDOW:5:20 LEADING:5 TRAILING:5 MINLEN:50
+
+done
+
+### run Trinity
+
