@@ -42,4 +42,13 @@ ILLUMINACLIP:/usit/abel/u1/mortema/software/Trimmomatic-0.36/adapters/TruSeq3-PE
 done
 
 ### run Trinity
+module load trinityrnaseq/2.5.1
+Trinity --seqType fq --SS_lib_type FR \
+--left left/A_S65_left_P_qtrim.fq,left/B_S66_left_P_qtrim.fq,left/C_S67_left_P_qtrim.fq,left/D_S68_left_P_qtrim.fq,left/F_S69_left_P_qtrim.fq,\
+left/G_S70_left_P_qtrim.fq,left/I_S72_left_P_qtrim.fq,left/K_S73_left_P_qtrim.fq,left/L_S74_left_P_qtrim.fq,left/M_S75_left_P_qtrim.fq,\
+left/N_S76_left_P_qtrim.fq,left/P_S77_left_P_qtrim.fq,left/Q_S78_left_P_qtrim.fq,left/R_S79_left_P_qtrim.fq \
+--right right/A_S65_right_P_qtrim.fq,right/B_S66_right_P_qtrim.fq,right/C_S67_right_P_qtrim.fq,right/D_S68_right_P_qtrim.fq,right/F_S69_right_P_qtrim.fq,\
+right/G_S70_right_P_qtrim.fq,right/I_S72_right_P_qtrim.fq,right/K_S73_right_P_qtrim.fq,right/L_S74_right_P_qtrim.fq,right/M_S75_right_P_qtrim.fq,\
+right/N_S76_right_P_qtrim.fq,right/P_S77_right_P_qtrim.fq,right/Q_S78_right_P_qtrim.fq,right/R_S79_right_P_qtrim.fq \
+--CPU 20 --max_memory 40G --output trinity_out/
 
