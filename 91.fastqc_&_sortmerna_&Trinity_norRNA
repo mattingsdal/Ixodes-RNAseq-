@@ -52,3 +52,7 @@ right/G_S70_right_P_qtrim.fq,right/I_S72_right_P_qtrim.fq,right/K_S73_right_P_qt
 right/N_S76_right_P_qtrim.fq,right/P_S77_right_P_qtrim.fq,right/Q_S78_right_P_qtrim.fq,right/R_S79_right_P_qtrim.fq \
 --CPU 20 --max_memory 40G --output trinity_out/
 
+# make super-transcipts
+/cluster/software/VERSIONS/trinityrnaseq/2.5.1/Analysis/SuperTranscripts/Trinity_gene_splice_modeler.py --trinity_fasta Trinity.fasta
+
+
