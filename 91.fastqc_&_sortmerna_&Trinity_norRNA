@@ -55,4 +55,8 @@ right/N_S76_right_P_qtrim.fq,right/P_S77_right_P_qtrim.fq,right/Q_S78_right_P_qt
 # make super-transcipts
 /cluster/software/VERSIONS/trinityrnaseq/2.5.1/Analysis/SuperTranscripts/Trinity_gene_splice_modeler.py --trinity_fasta Trinity.fasta
 
+### salmon index
+~/software/salmon-0.10.0_linux_x86_64/bin/salmon index -t trinity_genes.fasta -i transcripts_index --type quasi -k 31
+
+## salmon quantification
 
