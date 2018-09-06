@@ -63,3 +63,14 @@ for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77
 do
 ~/software/salmon-0.10.0_linux_x86_64/bin/salmon quant -i transcripts_index -l A -1 $i*left* -2 $i*right* --output $i -p 20
 done
+
+## make matrix
+
+
+for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
+do
+cut -f4 $i/quant.sf >${i}_TPM
+done
+
+paste *TPM >all_TMP
+
