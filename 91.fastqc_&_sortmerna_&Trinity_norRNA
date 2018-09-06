@@ -59,4 +59,7 @@ right/N_S76_right_P_qtrim.fq,right/P_S77_right_P_qtrim.fq,right/Q_S78_right_P_qt
 ~/software/salmon-0.10.0_linux_x86_64/bin/salmon index -t trinity_genes.fasta -i transcripts_index --type quasi -k 31
 
 ## salmon quantification
-
+for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
+do
+~/software/salmon-0.10.0_linux_x86_64/bin/salmon quant -i transcripts_index -l A -1 $i*left* -2 $i*right* --output $i -p 20
+done
