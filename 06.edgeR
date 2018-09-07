@@ -1,3 +1,65 @@
+################# START
+
+library(edgeR)
+setwd("C:/Users/mortenma/Desktop")
+
+lars=read.delim("de_novo_super_salmon",sep="\t",header=T,row.names=1)
+lars=read.delim("all_all",sep="\t",header=T,row.names=1)
+
+lars2=lars[,2:15]
+
+cpm_log <- cpm(lars2, log = TRUE)
+median_log2_cpm <- apply(cpm_log, 1, median)
+hist(median_log2_cpm)
+expr_cutoff <- -1
+abline(v = expr_cutoff, col = "red", lwd = 3)
+sum(median_log2_cpm > expr_cutoff)
+lars3 <- lars2[median_log2_cpm > expr_cutoff, ]
+
+id=1:14
+day=c(rep(0,4),rep(10,3),rep(20,4),rep(20,3))
+tmp=c(rep(0,4),rep(10,3),rep(20,4),rep(0,3))
+
+y <- DGEList(lars3)
+y <- calcNormFactors(y)
+design <- model.matrix(~id + day + tmp)
+y <- estimateDisp(y, design)
+fit <- glmFit(y, design)
+lrt <- glmLRT(fit, coef = 4)
+
+top=topTags(lrt,adjust.method="BH", sort.by="PValue", p.value=0.001,n=100)
+write.table(top,"top.txt",sep="\t",quote=F)
+
+################# END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 library(edgeR)
 
 setwd("C:/Users/mortenma/Desktop")
