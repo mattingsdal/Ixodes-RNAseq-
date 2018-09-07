@@ -9,3 +9,14 @@ module load trinotate/3.0.1
 /cluster/software/VERSIONS/transdecoder/3.0.0/TransDecoder.Predict -t Trinity.fasta
 
 ls -1 |grep transdecoder
+
+https://github.com/trinityrnaseq/EMBOtrinityWorkshopSept2016/wiki/Coding-Region-Identification-and-Functional-Annotation-Using-TransDecoder-and-Trinotate
+
+blastp -query Trinity.fasta.transdecoder.pep \
+         -db ../data/mini_sprot.pep -num_threads 2 \
+         -max_target_seqs 1 -outfmt 6 -evalue 1e-5 \
+          > swissprot.blastp.outfmt6
+          
+hmmscan --cpu 2 --domtblout TrinotatePFAM.out \
+          ~/share/Day4/Trinotate_Data/Pfam-A.hmm \
+          Trinity.fasta.transdecoder.pep
