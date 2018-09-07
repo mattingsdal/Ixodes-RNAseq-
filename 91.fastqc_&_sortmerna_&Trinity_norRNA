@@ -64,6 +64,9 @@ do
 ~/software/salmon-0.10.0_linux_x86_64/bin/salmon quant -i transcripts_index -l A -1 $i*left* -2 $i*right* --output $i -p 20
 done
 
+
+## 
+
 ## make matrix
 
 
