@@ -1,0 +1,11 @@
+################
+################ Transcriptome annotation
+################
+
+module load transdecoder/3.0.0
+module load trinotate/3.0.1
+
+/cluster/software/VERSIONS/transdecoder/3.0.0/TransDecoder.LongOrfs -t Trinity.fasta
+/cluster/software/VERSIONS/transdecoder/3.0.0/TransDecoder.Predict -t Trinity.fasta
+
+ls -1 |grep transdecoder
