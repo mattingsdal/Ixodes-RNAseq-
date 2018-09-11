@@ -55,11 +55,17 @@ right/N_S76_right_P_qtrim.fq,right/P_S77_right_P_qtrim.fq,right/Q_S78_right_P_qt
 # make super-transcipts
 /cluster/software/VERSIONS/trinityrnaseq/2.5.1/Analysis/SuperTranscripts/Trinity_gene_splice_modeler.py --trinity_fasta Trinity.fasta
 
+############################################
+### RSEM & bowtie2 quantification
+### RSEM & bowtie2 quantification
 
-### RSM & bowtie2 quantification
 /cluster/software/VERSIONS/trinityrnaseq/2.5.1/util/align_and_estimate_abundance.pl --transcripts Trinity.fasta --seqType fq \
 --left N_S76_left_P_qtrim.fq.gz --right N_S76_right_P_qtrim.fq.gz --est_method RSEM --output_dir test --aln_method bowtie2 \
 --prep_reference --thread_count 10
+
+### RSEM & bowtie2 quantification
+### RSEM & bowtie2 quantification
+###########################################
 
 
 ### salmon index
