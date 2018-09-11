@@ -1,4 +1,4 @@
-################# START
+################# START GLM
 
 library(edgeR)
 setwd("C:/Users/mortenma/Desktop")
@@ -31,6 +31,24 @@ top=topTags(lrt,adjust.method="BH", sort.by="PValue", p.value=0.001,n=100)
 write.table(top,"top.txt",sep="\t",quote=F)
 
 ################# END
+
+
+################# START simple 20 degrees vs 0 degrees
+
+lars_direct=cbind(lars2[,1:4],lars2[,8:11])
+
+
+y <- DGEList(counts = lars_direct, group = rep(1:2,each=4))
+y <- calcNormFactors(y)
+y <- estimateDisp(y)
+plotBCV(y)
+
+et <- exactTest(y)
+results_edgeR <- topTags(et, n = nrow(lars_direct), sort.by = "logFC")
+fdr=results_edgeR[results_edgeR$table$FDR<0.05,]
+fdr_fc=fdr[as.data.frame(fdr[,1])>2 | as.data.frame(fdr[,1])<(-2),]
+
+## fc contains fdr<0.05 and fc > abs(2), n=97
 
 
 
