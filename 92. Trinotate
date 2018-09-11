@@ -4,19 +4,45 @@
 
 module load transdecoder/3.0.0
 module load trinotate/3.0.1
+module load trinityrnaseq/2.5.1
+module load blast+
 
+# find ORF and predict ORFs
 /cluster/software/VERSIONS/transdecoder/3.0.0/TransDecoder.LongOrfs -t Trinity.fasta
 /cluster/software/VERSIONS/transdecoder/3.0.0/TransDecoder.Predict -t Trinity.fasta
 
 ls -1 |grep transdecoder
 
-https://github.com/trinityrnaseq/EMBOtrinityWorkshopSept2016/wiki/Coding-Region-Identification-and-Functional-Annotation-Using-TransDecoder-and-Trinotate
 
+# make template
+/cluster/software/VERSIONS/trinotate/3.0.1/admin/Build_Trinotate_Boilerplate_SQLite_db.pl ixodes_ricinus
+makeblastdb -in uniprot_sprot.pep -dbtype prot
+gunzip Pfam-A.hmm.gz
+hmmpress Pfam-A.hmm
+
+
+### do blast+, hmmscan, singalp etc
 blastp -query Trinity.fasta.transdecoder.pep \
-         -db uniprot-Ixodes.fasta -num_threads 2 \
+         -db uniprot_sprot.pep -num_threads 20 \
          -max_target_seqs 1 -outfmt 6 -evalue 1e-5 \
-          > swissprot.blastp.outfmt6
-          
+          > Trinity.fasta.transdecoder.blastp.outfmt6
+
 hmmscan --cpu 2 --domtblout TrinotatePFAM.out \
           ~/share/Day4/Trinotate_Data/Pfam-A.hmm \
           Trinity.fasta.transdecoder.pep
+          
+~/software/signalp-4.1/signalp -f short -n signalp.out Trinity.fasta.transdecoder.pep
+~/software/tmhmm-2.0c/bin/decodeanhmm.Linux_x86_64 --short < Trinity.fasta.transdecoder.pep > tmhmm.out
+
+### oprepare for loding results
+/cluster/software/VERSIONS/trinityrnaseq/2.5.1/util/support_scripts/get_Trinity_gene_to_trans_map.pl Trinity.fasta >  Trinity.fasta.gene_trans_map
+Trinotate ixodes_ricinus.sqlite init --gene_trans_map Trinity.fasta.gene_trans_map --transcript_fasta Trinity.fasta --transdecoder_pep Trinity.fasta.transdecoder.pep
+
+
+## load results
+Trinotate ixodes_ricinus.sqlite LOAD_swissprot_blastp Trinity.fasta.transdecoder.blastp.outfmt6	
+Trinotate ixodes_ricinus.sqlite LOAD_pfam TrinotatePFAM.out
+
+
+### generate report
+Trinotate ixodes_ricinus.sqlite report > trinotate_annotation_report.xls
