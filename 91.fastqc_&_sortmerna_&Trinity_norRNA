@@ -32,7 +32,7 @@ done
 
 module load java
 
-for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
+for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 H_S71 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
 do
 
 java -Xmx1G -jar ~/software/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 -threads 16 \
@@ -59,9 +59,11 @@ right/N_S76_right_P_qtrim.fq,right/P_S77_right_P_qtrim.fq,right/Q_S78_right_P_qt
 ### RSEM & bowtie2 quantification
 ### RSEM & bowtie2 quantification
 
-/cluster/software/VERSIONS/trinityrnaseq/2.5.1/util/align_and_estimate_abundance.pl --transcripts Trinity.fasta --seqType fq \
---left N_S76_left_P_qtrim.fq.gz --right N_S76_right_P_qtrim.fq.gz --est_method RSEM --output_dir test --aln_method bowtie2 \
---prep_reference --thread_count 10
+for i in A_S65 B_S66 C_S67 D_S68 F_S69 G_S70 H_S71 I_S72 K_S73 L_S74 M_S75 N_S76 P_S77 Q_S78 R_S79
+do
+~/software/RSEM-1.3.1/rsem-calculate-expression --bowtie2 --num-threads 20 --paired-end ${i}_left_P_qtrim.fq.gz ${i}_right_P_qtrim.fq.gz Trinity.fasta.bowtie2 ${i}_RSEM_bowtie2
+done
+
 
 ### RSEM & bowtie2 quantification
 ### RSEM & bowtie2 quantification
