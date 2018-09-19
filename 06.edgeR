@@ -1,141 +1,48 @@
-################# START GLM
-
 library(edgeR)
 setwd("C:/Users/mortenma/Desktop")
 
-lars=read.delim("de_novo_super_salmon",sep="\t",header=T,row.names=1)
-lars=read.delim("all_all",sep="\t",header=T,row.names=1)
+lars=read.delim("trinity_bowtie2_RSEM.mean.TPM_1.matrix",sep="\t",header=T,row.names=1)
 
-lars2=lars[,2:15]
 
-cpm_log <- cpm(lars2, log = TRUE)
-median_log2_cpm <- apply(cpm_log, 1, median)
-hist(median_log2_cpm)
-expr_cutoff <- -1
-abline(v = expr_cutoff, col = "red", lwd = 3)
-sum(median_log2_cpm > expr_cutoff)
-lars3 <- lars2[median_log2_cpm > expr_cutoff, ]
 
-id=1:14
-day=c(rep(0,4),rep(10,3),rep(20,4),rep(20,3))
-tmp=c(rep(0,4),rep(10,3),rep(20,4),rep(0,3))
+id=1:15
+day=c(rep(0,4),rep(10,4),rep(20,4),rep(20,3))
+tmp=c(rep(0,4),rep(10,4),rep(20,4),rep(0,3))
 
-y <- DGEList(lars3)
-y <- calcNormFactors(y)
+y <- DGEList(lars)
+y <- calcNormFactors(y,method="none")
 design <- model.matrix(~id + day + tmp)
 y <- estimateDisp(y, design)
+
 fit <- glmFit(y, design)
 lrt <- glmLRT(fit, coef = 4)
 
-top=topTags(lrt,adjust.method="BH", sort.by="PValue", p.value=0.001,n=100)
-write.table(top,"top.txt",sep="\t",quote=F)
+top=topTags(lrt,adjust.method="fdr", sort.by="PValue", p.value=0.05,n=1000)
 
-################# END
-
-
-################# START simple 20 degrees vs 0 degrees
-
-lars_direct=cbind(lars2[,1:4],lars2[,8:11])
+anno=read.table("anno_TPM_1.txt",sep="\t",header=T,quote="")
 
 
+A=anno[match(row.names(top$table),anno[,2]),]
+EXP=lars[match(row.names(top$table),row.names(lars)),]
+OUT=cbind(top$table,A[,3],EXP)
+write.table(OUT,"top1.txt",sep="\t",quote=F)
+
+
+
+### direct
+lars_direct=cbind(lars[,1:4],lars[,9:12])
 y <- DGEList(counts = lars_direct, group = rep(1:2,each=4))
-y <- calcNormFactors(y)
+y <- calcNormFactors(y,method="none")
 y <- estimateDisp(y)
-plotBCV(y)
+x=rep(1:2,each=4)
+fit <- glmFit(y, design= model.matrix(~x))
+lrt <- glmLRT(fit, coef = 2)
 
-et <- exactTest(y)
-results_edgeR <- topTags(et, n = nrow(lars_direct), sort.by = "logFC")
-fdr=results_edgeR[results_edgeR$table$FDR<0.05,]
-fdr_fc=fdr[as.data.frame(fdr[,1])>2 | as.data.frame(fdr[,1])<(-2),]
-
-## fc contains fdr<0.05 and fc > abs(2), n=97
+top=topTags(lrt,adjust.method="fdr", sort.by="PValue", p.value=0.05,n=10000)
+anno=read.table("anno_TPM_1.txt",sep="\t",header=T,quote="")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-library(edgeR)
-
-setwd("C:/Users/mortenma/Desktop")
-
-lars=read.delim("combined.txt",sep="\t",header=T,row.names=1)
-
-lars2=lars[5:23344,]
-plot(rowMeans(lars2[,1:4]),rowMeans(lars2[,9:12]),ylim=c(0,100000),xlim=c(0,100000))
-
-y <- DGEList(counts=lars2)
-
-## 1 = romtemp
-## 2 = 10 grader, 5 døgn
-## 3 = 0 grader, 10 døgn 
-## 4 = romtemp 10 døgn
-group <- factor(c(1,1,1,1,2,2,2,2,3,3,3,3,4,4,4))
-
-# filtrering
-y <- DGEList(counts=lars2, group=group)
-keep <- rowSums(cpm(y)>10) >= 2
-y <- y[keep, , keep.lib.sizes=FALSE]
-
-# deisgn matrix
-design <- model.matrix(~group)
-## normalisering
-
-
-d2 = estimateDisp(y)
-plotMDS(y, method="bcv", col=as.numeric(d2$samples$group))
-
-d3 <- estimateCommonDisp(d2, verbose=T)
-d4 <- estimateTagwiseDisp(d3)
-plotBCV(d4)
-
-
-design=readTargets("targets.txt")
-design2 <- model.matrix(~tmp, data=design)
-
-test=glmQLFit(d3,design=design2)
-test2=glmQLFTest(test)
-topTags(test2)
-
-top=topTags(test2,adjust.method="BH", sort.by="PValue", p.value=0.001)
-
-# HSP20 = ISCW015266
-# HSP20 = ISCW024062
-mygene="ISCW021718"
-
-#plot
-plot(as.numeric(lars2[match(mygene,row.names(lars2)),]),type="b")
-x11()
-# boxplot
-boxplot(as.numeric(lars2[match(mygene,row.names(lars2)),]) ~ group)
-
-top=topTags(test2,adjust.method="fdr", p.value=0.01,n=1000,sort.by="logFC")
-## annotation
-anno=read.table("header",sep="|",header=F,quote="")
-top_anno=cbind(top,anno[match(row.names(top),gsub("gene:","",anno[,4])),])
-
-plot(test2$table$logCPM,test2$table$logFC,cex=0.5,pch=19)
-points(top_anno$logCPM,top_anno$logFC,col="red")
+A=anno[match(row.names(top$table),anno[,2]),]
+EXP=lars_direct[match(row.names(top$table),row.names(lars_direct)),]
+OUT=cbind(top$table,A[,3],EXP)
+write.table(OUT,"top_direct.txt",sep="\t",quote=F)
